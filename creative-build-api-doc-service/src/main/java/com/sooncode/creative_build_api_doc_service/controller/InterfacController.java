@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +27,13 @@ import com.sooncode.creative_build_api_doc_service.model.GetAllModulesModel;
 import com.sooncode.creative_build_api_doc_service.model.request.GetInterfaceByInterfacNumberModel;
 import com.sooncode.creative_build_api_doc_service.model.response.GetAllInterfacesResponseModel;
 import com.sooncode.creative_build_api_doc_service.model.response.ParameterConstraintModel;
-import com.sooncode.creative_build_api_doc_service.util.InterfacNumberBuilder;
 import com.sooncode.creative_build_api_doc_service.util.MyUUID;
 import com.sooncode.soonjdbc.ModelTransform;
 import com.sooncode.soonjdbc.constant.Sort;
 import com.sooncode.soonjdbc.service.JdbcService;
 import com.sooncode.soonjdbc.sql.condition.Conditions;
 import com.sooncode.soonjdbc.sql.condition.ConditionsBuilderProcess;
+ 
 
 @Controller
 @RequestMapping("/interfacController")
@@ -39,6 +41,12 @@ public class InterfacController {
 
 	@Autowired
 	private JdbcService jdbcService;
+
+	@Autowired
+	private ApplicationContext ctx;
+
+	@Autowired
+	private DefaultListableBeanFactory beanFactory;
 
 	@RequestMapping(value = "addInterfac", method = RequestMethod.POST)
 	@ResponseBody
@@ -170,4 +178,97 @@ public class InterfacController {
 		return map;
 
 	}
+
+	/*@RequestMapping(value = "loadController", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> loadController() {
+
+		String classPath = "D:\\java_source\\";
+		String controllerName = "TestController";
+
+		String[] params = new String[] { "-d", classPath, classPath + controllerName + ".java", "-verbose" };
+		int status = Main.compile(params);
+
+		try {
+			ClassLo.lo();
+			Class<?> controller = Class.forName("com.sooncode.creative_build_api_doc_service.TestController");
+			
+			registerBean("testController",controller);
+			unregisterController(controller, "test");
+			registerController(controller, "test");
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("loadController", "ok");
+
+		return map;
+
+	}
+
+	private void registerController(Class<?> controllerClass, String methodName) {
+		RequestMappingHandlerMapping requestMappingHandlerMapping = ctx.getBean(RequestMappingHandlerMapping.class);
+		Method getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
+		getMappingForMethod.setAccessible(true);
+
+		RObject<?> roj = new RObject<>(controllerClass);
+		Method method = roj.getDeclaredMethod(methodName);
+
+		RequestMappingInfo mapping_info;
+		try {
+
+			mapping_info = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, controllerClass);
+		 
+
+			requestMappingHandlerMapping.registerMapping(mapping_info, roj.getObject(), method);
+			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+	}
+	private void unregisterController(Class<?> controllerClass, String methodName) {
+		RequestMappingHandlerMapping requestMappingHandlerMapping = ctx.getBean(RequestMappingHandlerMapping.class);
+		Method getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
+		getMappingForMethod.setAccessible(true);
+		
+		RObject<?> roj = new RObject<>(controllerClass);
+		Method method = roj.getDeclaredMethod(methodName);
+		
+		RequestMappingInfo mapping_info;
+		try {
+			
+			mapping_info = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, controllerClass);
+			
+			
+			requestMappingHandlerMapping.unregisterMapping(mapping_info);
+			
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void registerBean(String beanName, Class<?> beanClass) {
+		Assert.notNull(beanClass, "register bean class must not null");
+		GenericBeanDefinition bd = new GenericBeanDefinition();
+		bd.setBeanClass(beanClass);
+
+		if (StringUtils.hasText(beanName)) {
+			beanFactory.registerBeanDefinition(beanName, bd);
+		} else {
+			BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory);
+		}
+
+	}*/
 }
