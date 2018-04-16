@@ -116,7 +116,7 @@
                 <configuration>
                     <imageName>creative_build/${project.artifactId}</imageName>
                     <dockerDirectory>src/main/docker</dockerDirectory>
-                    <dockerHost>http://192.168.255.100:2375</dockerHost>
+                    <dockerHost>http://114.245.33.158:2375</dockerHost>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>

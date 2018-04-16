@@ -25,6 +25,7 @@ import com.sooncode.creative_build_api_doc_service.model.AddInterfacModel;
 import com.sooncode.creative_build_api_doc_service.model.GetAllInterfacesModel;
 import com.sooncode.creative_build_api_doc_service.model.GetAllModulesModel;
 import com.sooncode.creative_build_api_doc_service.model.request.GetInterfaceByInterfacNumberModel;
+import com.sooncode.creative_build_api_doc_service.model.request.SearchParameter;
 import com.sooncode.creative_build_api_doc_service.model.response.GetAllInterfacesResponseModel;
 import com.sooncode.creative_build_api_doc_service.model.response.ParameterConstraintModel;
 import com.sooncode.creative_build_api_doc_service.util.MyUUID;
@@ -33,7 +34,6 @@ import com.sooncode.soonjdbc.constant.Sort;
 import com.sooncode.soonjdbc.service.JdbcService;
 import com.sooncode.soonjdbc.sql.condition.Conditions;
 import com.sooncode.soonjdbc.sql.condition.ConditionsBuilderProcess;
- 
 
 @Controller
 @RequestMapping("/interfacController")
@@ -86,6 +86,7 @@ public class InterfacController {
 			p.setInterfacId(interfac.getInterfacId());
 			Conditions con = ConditionsBuilderProcess.getConditions(p);
 			con.setOderBy("isMust", Sort.DESC);
+			con.setOderBy("parameterCode", Sort.ASC);
 			List<Parameter> parameters = jdbcService.gets(con);
 			ParameterRetur pr = new ParameterRetur();
 			pr.setInterfacId(interfac.getInterfacId());
@@ -179,96 +180,125 @@ public class InterfacController {
 
 	}
 
-	/*@RequestMapping(value = "loadController", method = RequestMethod.POST)
+	@RequestMapping(value = "searchParameter", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> loadController() {
+	public Map<String, Object> searchParameter(@RequestBody SearchParameter sp) {
 
-		String classPath = "D:\\java_source\\";
-		String controllerName = "TestController";
+		Parameter pr = new Parameter();
+		pr.setInterfacId(sp.getInterfacId());
+		pr.setParameterCode(sp.getKey());
+		Conditions c = ConditionsBuilderProcess.getConditions(pr);
 
-		String[] params = new String[] { "-d", classPath, classPath + controllerName + ".java", "-verbose" };
-		int status = Main.compile(params);
-
-		try {
-			ClassLo.lo();
-			Class<?> controller = Class.forName("com.sooncode.creative_build_api_doc_service.TestController");
-			
-			registerBean("testController",controller);
-			unregisterController(controller, "test");
-			registerController(controller, "test");
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-
+		List<ParameterRetur> list = jdbcService.gets(c);
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("loadController", "ok");
+		map.put("parameterReturs", list);
 
 		return map;
 
 	}
 
-	private void registerController(Class<?> controllerClass, String methodName) {
-		RequestMappingHandlerMapping requestMappingHandlerMapping = ctx.getBean(RequestMappingHandlerMapping.class);
-		Method getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
-		getMappingForMethod.setAccessible(true);
+	@RequestMapping(value = "searchParameter4return", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> searchParameter4return(@RequestBody SearchParameter sp) {
 
-		RObject<?> roj = new RObject<>(controllerClass);
-		Method method = roj.getDeclaredMethod(methodName);
+		ParameterRetur pr = new ParameterRetur();
+		pr.setInterfacId(sp.getInterfacId());
+		pr.setParameterCode(sp.getKey());
 
-		RequestMappingInfo mapping_info;
-		try {
+		Conditions c = ConditionsBuilderProcess.getConditions(pr);
 
-			mapping_info = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, controllerClass);
-		 
+		List<ParameterRetur> list = jdbcService.gets(c);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("parameterReturs", list);
 
-			requestMappingHandlerMapping.registerMapping(mapping_info, roj.getObject(), method);
-			
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		return map;
 
 	}
-	private void unregisterController(Class<?> controllerClass, String methodName) {
-		RequestMappingHandlerMapping requestMappingHandlerMapping = ctx.getBean(RequestMappingHandlerMapping.class);
-		Method getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
-		getMappingForMethod.setAccessible(true);
-		
-		RObject<?> roj = new RObject<>(controllerClass);
-		Method method = roj.getDeclaredMethod(methodName);
-		
-		RequestMappingInfo mapping_info;
-		try {
-			
-			mapping_info = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, controllerClass);
-			
-			
-			requestMappingHandlerMapping.unregisterMapping(mapping_info);
-			
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		
-	}
 
-	public void registerBean(String beanName, Class<?> beanClass) {
-		Assert.notNull(beanClass, "register bean class must not null");
-		GenericBeanDefinition bd = new GenericBeanDefinition();
-		bd.setBeanClass(beanClass);
-
-		if (StringUtils.hasText(beanName)) {
-			beanFactory.registerBeanDefinition(beanName, bd);
-		} else {
-			BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory);
-		}
-
-	}*/
+	/*
+	 * @RequestMapping(value = "loadController", method = RequestMethod.POST)
+	 * 
+	 * @ResponseBody public Map<String, Object> loadController() {
+	 * 
+	 * String classPath = "D:\\java_source\\"; String controllerName =
+	 * "TestController";
+	 * 
+	 * String[] params = new String[] { "-d", classPath, classPath + controllerName
+	 * + ".java", "-verbose" }; int status = Main.compile(params);
+	 * 
+	 * try { ClassLo.lo(); Class<?> controller =
+	 * Class.forName("com.sooncode.creative_build_api_doc_service.TestController");
+	 * 
+	 * registerBean("testController",controller); unregisterController(controller,
+	 * "test"); registerController(controller, "test"); } catch (Exception e) {
+	 * 
+	 * e.printStackTrace(); }
+	 * 
+	 * Map<String, Object> map = new HashMap<String, Object>();
+	 * map.put("loadController", "ok");
+	 * 
+	 * return map;
+	 * 
+	 * }
+	 * 
+	 * private void registerController(Class<?> controllerClass, String methodName)
+	 * { RequestMappingHandlerMapping requestMappingHandlerMapping =
+	 * ctx.getBean(RequestMappingHandlerMapping.class); Method getMappingForMethod =
+	 * ReflectionUtils.findMethod(RequestMappingHandlerMapping.class,
+	 * "getMappingForMethod", Method.class, Class.class);
+	 * getMappingForMethod.setAccessible(true);
+	 * 
+	 * RObject<?> roj = new RObject<>(controllerClass); Method method =
+	 * roj.getDeclaredMethod(methodName);
+	 * 
+	 * RequestMappingInfo mapping_info; try {
+	 * 
+	 * mapping_info = (RequestMappingInfo)
+	 * getMappingForMethod.invoke(requestMappingHandlerMapping, method,
+	 * controllerClass);
+	 * 
+	 * 
+	 * requestMappingHandlerMapping.registerMapping(mapping_info, roj.getObject(),
+	 * method);
+	 * 
+	 * } catch (IllegalAccessException e) { e.printStackTrace(); } catch
+	 * (IllegalArgumentException e) { e.printStackTrace(); } catch
+	 * (InvocationTargetException e) { e.printStackTrace(); }
+	 * 
+	 * } private void unregisterController(Class<?> controllerClass, String
+	 * methodName) { RequestMappingHandlerMapping requestMappingHandlerMapping =
+	 * ctx.getBean(RequestMappingHandlerMapping.class); Method getMappingForMethod =
+	 * ReflectionUtils.findMethod(RequestMappingHandlerMapping.class,
+	 * "getMappingForMethod", Method.class, Class.class);
+	 * getMappingForMethod.setAccessible(true);
+	 * 
+	 * RObject<?> roj = new RObject<>(controllerClass); Method method =
+	 * roj.getDeclaredMethod(methodName);
+	 * 
+	 * RequestMappingInfo mapping_info; try {
+	 * 
+	 * mapping_info = (RequestMappingInfo)
+	 * getMappingForMethod.invoke(requestMappingHandlerMapping, method,
+	 * controllerClass);
+	 * 
+	 * 
+	 * requestMappingHandlerMapping.unregisterMapping(mapping_info);
+	 * 
+	 * } catch (IllegalAccessException e) { e.printStackTrace(); } catch
+	 * (IllegalArgumentException e) { e.printStackTrace(); } catch
+	 * (InvocationTargetException e) { e.printStackTrace(); }
+	 * 
+	 * }
+	 * 
+	 * public void registerBean(String beanName, Class<?> beanClass) {
+	 * Assert.notNull(beanClass, "register bean class must not null");
+	 * GenericBeanDefinition bd = new GenericBeanDefinition();
+	 * bd.setBeanClass(beanClass);
+	 * 
+	 * if (StringUtils.hasText(beanName)) {
+	 * beanFactory.registerBeanDefinition(beanName, bd); } else {
+	 * BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory); }
+	 * 
+	 * }
+	 */
 }
