@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sooncode.creative_build_api_doc_service.entity.Project;
 import com.sooncode.creative_build_api_doc_service.model.AddProjectModel;
 import com.sooncode.creative_build_api_doc_service.model.GetApiDoc4Html;
+import com.sooncode.creative_build_api_doc_service.model.GetApiDoc4Word;
 import com.sooncode.creative_build_api_doc_service.model.freemarker.ProjectModel;
 import com.sooncode.creative_build_api_doc_service.model.request.GetProjectsModel;
 import com.sooncode.creative_build_api_doc_service.service.FreemarkerService;
 import com.sooncode.creative_build_api_doc_service.service.ProjectService;
+import com.sooncode.creative_build_api_doc_service.service.wordoutput.WordOutputService4API;
 import com.sooncode.creative_build_api_doc_service.util.FileUtil;
 import com.sooncode.creative_build_api_doc_service.util.MyUUID;
 import com.sooncode.soonjdbc.ModelTransform;
@@ -35,6 +37,10 @@ public class ProjectController {
 	private JdbcService jdbcService;
 	@Autowired
 	private ProjectService projectService;
+	
+	
+	@Autowired
+	private WordOutputService4API wordOutputService4API;
 
 	@RequestMapping(value = "addProject", method = RequestMethod.POST)
 	@ResponseBody
@@ -99,6 +105,20 @@ public class ProjectController {
 		
 		FileUtil fu = new FileUtil();
 		fu.writeFile("D:\\index.html", str, "utf-8");
+		return str;
+	}
+	
+	
+	
+	@RequestMapping(value = "getApiDoc4Word", method = RequestMethod.POST)
+	@ResponseBody
+	public String getApiDoc4Word(@RequestBody GetApiDoc4Word gadw) {
+		
+		String str = wordOutputService4API.buildDoc(gadw.getProjectId());
+		 
+		System.out.println("---------------------------------------------------------------");
+		System.out.println(str);
+		System.out.println("---------------------------------------------------------------");
 		return str;
 	}
 	
