@@ -15,9 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.annotation.Order;
 
-//@Order(1)
+@Order(1)
 
-//@WebFilter(filterName = "corsFilter", urlPatterns = "/*")
+@WebFilter(filterName = "corsFilter", urlPatterns = "/*")
 public class CorsFilter implements Filter {  
   
 	private final Log logger = LogFactory.getLog(getClass());
