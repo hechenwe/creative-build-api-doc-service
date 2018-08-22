@@ -5,7 +5,8 @@ import java.util.List;
 import com.sooncode.creative_build_api_doc_service.entity.ApiNode;
 
 public class StartAndEndNode {
-
+	
+	private List<ApiNode> allNodes;
 	private List<ApiNode> startNodes;
 	private List<ApiNode> endNodes;
 
@@ -24,5 +25,15 @@ public class StartAndEndNode {
 	public void setEndNodes(List<ApiNode> endNodes) {
 		this.endNodes = endNodes;
 	}
+
+	public List<ApiNode> getAllNodes() {
+		return allNodes;
+	}
+
+	public void setAllNodes(List<ApiNode> allNodes) {
+		this.allNodes = allNodes;
+	}
+	
+	
 
 }

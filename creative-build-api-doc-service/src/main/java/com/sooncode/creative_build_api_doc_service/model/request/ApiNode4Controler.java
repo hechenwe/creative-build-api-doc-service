@@ -1,19 +1,13 @@
 package com.sooncode.creative_build_api_doc_service.model.request;
 
-public class GetApiNodesModel {
-	
+import com.sooncode.creative_build_api_doc_service.entity.ApiNode;
+
+public class ApiNode4Controler extends ApiNode {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6549637623430643120L;
 	private String apiUrl;
-
-	private String projectId;
-
-	 
-	public String getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
 
 	public String getApiUrl() {
 		return apiUrl;
@@ -22,9 +16,7 @@ public class GetApiNodesModel {
 	public void setApiUrl(String apiUrl) {
 		this.apiUrl = apiUrl;
 	}
-
-	 
-
 	
 	
 }
+

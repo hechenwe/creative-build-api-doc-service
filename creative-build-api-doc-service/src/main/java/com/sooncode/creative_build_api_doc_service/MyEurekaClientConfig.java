@@ -17,34 +17,34 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-@Service
-public class MyEurekaClientConfig extends EurekaClientConfigBean {
+//@Service
+public class MyEurekaClientConfig   {
 
-	@Override
+	 
 	public List<String> getEurekaServerServiceUrls(String arg0) {
 		List<String> urls = new ArrayList<>();
 
 		String url2 = "http://api.sooncode.com:9999/ipAddressService/getPhysicsServiceMassages4key?key=creative-build-api-doc-service";
-		HttpRequest.getRequest(url2);
+		//HttpRequest.getRequest(url2);
 		
 		
 		String url = "http://api.sooncode.com:9999/ipAddressService/getPhysicsServiceMassages4key?key=creative-build-registration-service";
-		String json = HttpRequest.getRequest(url);
+		//String json = HttpRequest.getRequest(url);
 		JsonParser parser = new JsonParser();
 
-		JsonArray jsonArray = parser.parse(json).getAsJsonArray();
+		//JsonArray jsonArray = parser.parse(json).getAsJsonArray();
 
 		Gson gson = new Gson();
-		for (JsonElement jsonElement : jsonArray) {
+		//for (JsonElement jsonElement : jsonArray) {
 
-			String s = jsonElement.toString();
-			PhysicsServiceMassage p = gson.fromJson(s, PhysicsServiceMassage.class);
-			String ip = p.getNowIp();
+			//String s = jsonElement.toString();
+			//PhysicsServiceMassage p = gson.fromJson(s, PhysicsServiceMassage.class);
+			//String ip = p.getNowIp();
 
-			String u = "http://" + ip + ":9001/eureka/";
+			String u = "http://" + "192.168.1.18" + ":9001/eureka/";
 			urls.add(u);
 
-		}
+		//}
 
 		System.out.println("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 		System.out.println(urls);

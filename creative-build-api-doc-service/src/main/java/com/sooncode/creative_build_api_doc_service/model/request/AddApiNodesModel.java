@@ -2,13 +2,11 @@ package com.sooncode.creative_build_api_doc_service.model.request;
 
 import java.util.List;
 
-import com.sooncode.creative_build_api_doc_service.entity.ApiNode;
-
 public class AddApiNodesModel {
 
 	 private String projectId ;
 	 
-	 private List<ApiNode> apiNodes ;
+	 private List<ApiNode4Controler> apiNodes ;
 
 	 
 	public String getProjectId() {
@@ -19,11 +17,11 @@ public class AddApiNodesModel {
 		this.projectId = projectId;
 	}
 
-	public List<ApiNode> getApiNodes() {
+	public List<ApiNode4Controler> getApiNodes() {
 		return apiNodes;
 	}
 
-	public void setApiNodes(List<ApiNode> apiNodes) {
+	public void setApiNodes(List<ApiNode4Controler> apiNodes) {
 		this.apiNodes = apiNodes;
 	}
 	 
